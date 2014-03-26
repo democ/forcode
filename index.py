@@ -83,7 +83,8 @@ def donate():
     if not result:
         flash('暂时没有人索码，请您稍后回来！')
     count = db_query('select count(*) from consumer', one=True)[0]
-    return render_template('index.html', result=result, count = count, active=0)
+    success = db_query("select seq from sqlite_sequence where name='consumer'", one=True)[0]
+    return render_template('index.html', result=result, success = success, count = count, active=0)
 
 
 @app.route('/complete', methods=['POST'])
@@ -99,7 +100,8 @@ def complete():
 @app.route('/')
 def index():
     count = db_query('select count(*) from consumer', one=True)[0]
-    return render_template('index.html', count = count, active=0)
+    success = db_query("select seq from sqlite_sequence where name='consumer'", one=True)[0]
+    return render_template('index.html', success = success, count = count, active=0)
 
 
 @app.route('/about')
