@@ -1,0 +1,65 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="container-narrow">
+  <br>
+  <h4 align="center">当前有{{ count }}人正在索码</h4>
+  <br>
+  <div class="row-fluid">
+    <div class="span12">
+      <div class="span6">
+        <button class="offset4 btn btn-large" data-toggle="collapse" data-target="#ask-for-code">我要索码</button>
+        <div id="ask-for-code" class="collapse" align = "center" style="min-height:0px">
+        <br>
+          <form class="form-horizontal" onsubmit="return dispatch()" method="post" action="/ask">
+            <input id = "email" name = "email"/>
+            <button>提交</button>
+          </form>
+        </div>
+      </div>
+        <div class="span6">
+          <button class="offset4 btn btn-large" data-toggle="collapse" data-target="#donate-for-code">我要赠码</button>
+          <div id="donate-for-code" class="collapse" style="min-height:0px">
+          <br>
+            <form class="form-horizontal" method="post" action="/donate">
+              赠码个数：
+              <select id="count" name = "count">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+              <button>提交</button>
+            </form>
+          </div>
+          <div>
+            <br>
+            {% if result %}
+            <ul class="offset4">
+            {% for item in result %}
+            <!--<li><a href="mailto:{{ item[0]  }}">{{ item[0] }}</a></li>-->
+            <li><div class = "box"><span id="receive-address" ng-bind="address" class="ng-binding">{{ item[0] }}</span></div></li>
+            {% endfor %}
+          </ul>
+          <br>
+          <form method="post" action="/complete">
+            {% for item in result %}
+            <input type="hidden" name="email" value={{ item[0] }}>
+            {% endfor %}
+          <button class="offset4">赠码完毕</button>
+        </form>
+            {% endif %}
+          </div>
+        </div>
+  </div>
+</div>
+    <script>
+      var dispatch = function() {
+        var reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+        q = document.getElementById("email");
+        if (q.value == "" || !reg.test(q.value)) {
+            alert("请输入合法的Email地址!");
+            return false;
+        }
+        return true;
+      }
+    </script>
+    {% endblock %}
